@@ -9,6 +9,8 @@ def display_time(obj_time_field):
 
 # Permet de retourner le nom de l'utilisateur
 def display_name(obj_user_field):
+    if obj_user_field is None:
+        return None
     return obj_user_field.get_full_name()
 
 # Permet de retourner l'ID de l'objet

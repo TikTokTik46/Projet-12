@@ -1,7 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from models import Client, Contrat
-from ..Epic_Event.utils import display_time, display_name, \
+from contrats.models import Client, Contrat
+from comptes.models import User
+from Epic_Event.utils import display_time, display_name, \
     display_id, choice_fields_validator
 
 class ClientMixin:
@@ -36,6 +37,7 @@ class ClientListSerializer(ModelSerializer, ClientMixin):
 
     client_id = serializers.SerializerMethodField()
     date_updated = serializers.SerializerMethodField()
+    client_type = serializers.SerializerMethodField()
 
     class Meta:
         model = Client
@@ -48,7 +50,7 @@ class ClientDetailSerializer(ModelSerializer, ClientMixin):
     client_id = serializers.SerializerMethodField()
     date_created = serializers.SerializerMethodField()
     date_updated = serializers.SerializerMethodField()
-    sales_contact = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Client
@@ -58,7 +60,7 @@ class ClientDetailSerializer(ModelSerializer, ClientMixin):
         read_only_fields = ['client_id']
 
     def to_internal_value(self, data):
-        choice_fields = {'client_type': Client.TYPES}
+        choice_fields = {'client_type': Client.CLIENT_TYPE}
         choice_fields_validator(data, choice_fields)
         return super().to_internal_value(data)
 

@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from models import Event
-from ..Epic_Event.utils import display_time, display_name, \
+from évènements.models import Event
+from Epic_Event.utils import display_time, display_name, \
     display_id, choice_fields_validator
 
 class EventMixin:
@@ -33,7 +33,7 @@ class EventListSerializer(ModelSerializer, EventMixin):
         read_only_fields = ['event_id']
 
     def to_internal_value(self, data):
-        choice_fields = {'client_type': Event.EVENT_STATUS}
+        choice_fields = {'event_status': Event.EVENT_STATUS}
         choice_fields_validator(data, choice_fields)
         return super().to_internal_value(data)
 
@@ -48,10 +48,10 @@ class EventDetailSerializer(ModelSerializer, EventMixin):
         model = Event
         fields = ['event_id','contrat','date_created','date_updated',
                   'support_contact','event_status','attendees',
-                  'event_date','notes']
+                  'event_date', 'notes']
         read_only_fields = ['event_id']
 
     def to_internal_value(self, data):
-        choice_fields = {'client_type': Event.EVENT_STATUS}
+        choice_fields = {'event_status': Event.EVENT_STATUS}
         choice_fields_validator(data, choice_fields)
         return super().to_internal_value(data)

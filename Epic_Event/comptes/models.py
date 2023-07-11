@@ -14,3 +14,4 @@ class User(AbstractUser):
     ]
 
     user_profile = models.CharField(max_length=2, choices=USER_PROFILES)
+

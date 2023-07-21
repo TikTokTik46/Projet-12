@@ -1,17 +1,13 @@
 from rest_framework.response import Response
 from comptes.serializers import UserSerializer
+from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-from rest_framework.views import APIView
+from comptes.models import User
+from rest_framework.permissions import IsAuthenticated
 from comptes.permissions import ComptesPermissions
 
-class UserCreate(APIView):
+class ComptesViewSet(ModelViewSet):
+    queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [ComptesPermissions]
+    permission_classes = [IsAuthenticated, ComptesPermissions]
 
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({'user_id': user.id},
-                            status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

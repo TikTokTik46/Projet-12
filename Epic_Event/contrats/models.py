@@ -4,14 +4,6 @@ from django.core.validators import RegexValidator
 
 class Client(models.Model):
 
-    NEW = 'NW'
-    EXISTING = 'EX'
-
-    CLIENT_TYPE = [
-        (NEW, 'Sans contrats'),
-        (EXISTING, 'Avec contrats'),
-    ]
-
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField()
@@ -21,27 +13,39 @@ class Client(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     sales_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                       on_delete=models.SET_NULL, null=True)
-    client_type = models.CharField(max_length=2, choices=CLIENT_TYPE)
+                                       on_delete=models.SET_NULL, null=True,
+                                      limit_choices_to={'user_profile': 'SA'})
 
     def __str__(self):
-        return f"Client n° : {self.id} - Company Name : {self.company_name}"
+        return f"{self.first_name} {self.last_name}"
 
 class Contrat(models.Model):
+
+    SIGNE = 'SI'
+    DEVIS_A_REALISER = 'DR'
+    DEVIS_ENVOYE = 'DE'
+
+    CONTRAT_STATUS = [
+        (SIGNE, 'Signé'),
+        (DEVIS_A_REALISER, 'Devis a réaliser'),
+        (DEVIS_ENVOYE, 'Devis envoyé'),
+    ]
+
 
     #Permet d'enregistrer une date au format JJ/MM/AAAA
     date_regex = r'^\d{2}/\d{2}/\d{4}$'
     date_validator = RegexValidator(date_regex, 'Veuillez entrer une date au format JJ/MM/AAAA.')
 
     sales_contact = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                       on_delete=models.SET_NULL, null=True)
+                                       on_delete=models.SET_NULL, null=True,
+                                      limit_choices_to={'user_profile': 'SA'})
     client = models.ForeignKey(Client,
                                        on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    status = models.BooleanField()
-    amount = models.FloatField()
-    payment_due = models.CharField(max_length=10, validators=[date_validator])
+    status = models.CharField(max_length=2, choices=CONTRAT_STATUS, default='DR')
+    amount_in_euros = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    payment_due = models.CharField(max_length=10, validators=[date_validator], null=True)
 
     def __str__(self):
         return f"Contrat n° : {self.id} - Client : {self.client} " \

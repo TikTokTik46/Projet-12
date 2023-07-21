@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from contrats.views import ClientViewSet, ContratViewSet
-from comptes.views import UserCreate
+from comptes.views import ComptesViewSet
 from évènements.views import EventViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -27,6 +27,7 @@ from rest_framework_simplejwt.views import (
 
 router = routers.SimpleRouter()
 router.register("clients", ClientViewSet, basename="clients")
+router.register("comptes", ComptesViewSet, basename="comptes")
 router.register("contrats", ContratViewSet, basename="contracts")
 router.register("evenements", EventViewSet, basename="events")
 
@@ -35,7 +36,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/login/', TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
-    path('api/signup/', UserCreate.as_view(), name='signup'),
     path('api/login/refresh/', TokenRefreshView.as_view(),
          name='token_refresh'),
     path("api/", include(router.urls)),

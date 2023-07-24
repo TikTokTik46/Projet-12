@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from contrats.views import ClientViewSet, ContratViewSet
-from comptes.views import ComptesViewSet
+from comptes.views import ComptesViewSet, ChangePasswordView
 from évènements.views import EventViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -38,5 +38,7 @@ urlpatterns = [
          name='token_obtain_pair'),
     path('api/login/refresh/', TokenRefreshView.as_view(),
          name='token_refresh'),
+    path('api/change_password/', ChangePasswordView.as_view(),
+         name='change_password'),
     path("api/", include(router.urls)),
 ]

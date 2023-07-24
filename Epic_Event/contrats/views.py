@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from évènements.models import Event
 from contrats.models import Contrat, Client
 from contrats.serializers import ContratDetailSerializer, ContratListSerializer,\
     ClientDetailSerializer, ClientListSerializer

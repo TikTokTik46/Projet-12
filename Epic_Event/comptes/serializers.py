@@ -54,3 +54,14 @@ class UserSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+class PasswordUpdateSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError(
+                "Le mot de passe actuel est incorrect.")
+        return value

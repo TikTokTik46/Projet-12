@@ -1,6 +1,9 @@
 from rest_framework import permissions
+import logging
 from contrats.models import Client, Contrat
 from évènements.models import Event
+
+logger = logging.getLogger('custom_permissions')
 
 class ComptesPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -9,6 +12,7 @@ class ComptesPermissions(permissions.BasePermission):
         elif request.user.is_superuser:
             return True
         else:
+            logger.warning(f"Accès refusé pour l'utilisateur {request.user}")
             return False
 
     def has_object_permission(self, request, view, obj):
@@ -23,12 +27,16 @@ class ClientPermissions(permissions.BasePermission):
             return True
         else:
             if request.user.user_profile == "SU":
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
             elif request.user.user_profile == "SA":
                 return True
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
 
     # permission detail
@@ -44,6 +52,8 @@ class ClientPermissions(permissions.BasePermission):
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
         elif request.method == "POST":
             if request.user.user_profile == "SU":
@@ -53,15 +63,21 @@ class ClientPermissions(permissions.BasePermission):
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
         else:
             if request.user.user_profile == "SA":
                 return request.user == obj.sales_contact
             elif request.user.user_profile == "SU":
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
 
 
@@ -72,33 +88,45 @@ class ContratPermissions(permissions.BasePermission):
             return True
         else:
             if request.user.user_profile == "SU":
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
             elif request.user.user_profile == "SA":
                 return True
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
 
     # permission detail
     def has_object_permission(self, request, view, obj):
         if request.method == "POST":
             if request.user.user_profile == "SU":
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
             elif request.user.user_profile == "SA":
                 return True
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
         else:
             if request.user.user_profile == "SA":
                 return request.user == obj.sales_contact
             elif request.user.user_profile == "SU":
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
 
 
@@ -115,6 +143,8 @@ class EventPermissions(permissions.BasePermission):
             elif request.user.user_profile == "GE":
                 return True
             else:
+                logger.warning(
+                    f"Accès refusé pour l'utilisateur {request.user}")
                 return False
 
     # permission detail
@@ -127,4 +157,6 @@ class EventPermissions(permissions.BasePermission):
         elif request.user.user_profile == "GE":
             return True
         else:
+            logger.warning(
+                f"Accès refusé pour l'utilisateur {request.user}")
             return False

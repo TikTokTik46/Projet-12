@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from évènements.models import Event
+from contrats.models import Contrat
+from django.core.exceptions import ValidationError
 from Epic_Event.utils import display_time, display_name, \
     display_id, choice_fields_validator
 
@@ -53,3 +55,10 @@ class EventDetailSerializer(ModelSerializer, EventMixin):
         choice_fields = {'event_status': Event.EVENT_STATUS}
         choice_fields_validator(data, choice_fields)
         return super().to_internal_value(data)
+
+    def validate_contrat(self, contrat: Contrat):
+        """Check that the contract status is not 'SI'"""
+        if contrat.status != 'SI':
+            raise ValidationError(
+                "Le contrat doit être signé avant de pouvoir créer un event")
+        return contrat
